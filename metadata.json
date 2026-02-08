@@ -1,0 +1,9 @@
+
+{
+  "name": "Tenjin's Vision",
+  "description": "A high-fidelity AI workspace monitor tracking posture, distance, and ocular health to ensure peak performance and well-being.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
