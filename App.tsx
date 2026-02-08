@@ -79,6 +79,7 @@ const App: React.FC = () => {
     }
   }, []);
 
+  // Notification Function
   const triggerNotification = useCallback((title: string, message: string) => {
     const now = Date.now();
     if (now - lastNotificationTimeRef.current < NOTIFICATION_COOLDOWN) return;
@@ -95,6 +96,7 @@ const App: React.FC = () => {
     triggerAlertSound();
   }, [triggerAlertSound]);
 
+  // Chnange scores func
   const calculateAuditScore = (audit: ProAnalysis): number => {
     let score = 0;
     const b = audit.blinking.status.toLowerCase();
@@ -141,6 +143,7 @@ const App: React.FC = () => {
 
   }, [proInsight, triggerNotification, status]);
 
+  //Analysis func and call Gemini API
   const performProAnalysis = async (blob: Blob) => {
     if (isAnalyzingPro) return;
     setIsAnalyzingPro(true);
@@ -181,6 +184,7 @@ const App: React.FC = () => {
     } catch (e: any) { console.warn("Analysis failed:", e); } finally { setIsAnalyzingPro(false); }
   };
 
+  // Generating Report 
   const openReportInNewWindow = (history: ProAnalysis[], totalMinutes: number) => {
     const avgScore = Math.round(history.reduce((acc, curr) => acc + calculateAuditScore(curr), 0) / history.length);
     const getS = (arr: string[], top: string, mid: string) => {
@@ -220,6 +224,7 @@ const App: React.FC = () => {
       }
     ];
 
+    //Report HTML
     const reportHtml = `
       <!DOCTYPE html>
       <html>
@@ -296,6 +301,7 @@ const App: React.FC = () => {
     window.open(url, '_blank');
   };
 
+  //End Session 
   const stopSession = useCallback(() => {
     if (frameIntervalRef.current) window.clearInterval(frameIntervalRef.current);
     if (snapshotTimerRef.current) window.clearInterval(snapshotTimerRef.current);
@@ -312,6 +318,7 @@ const App: React.FC = () => {
     setProInsight(null); setWellnessHistory([]); setHistory([]); setActiveToast(null);
   }, [history, wellnessHistory]);
 
+  //Start Session
   const startSession = async () => {
     try {
       if (window.aistudio && !(await window.aistudio.hasSelectedApiKey())) await window.aistudio.openSelectKey();
